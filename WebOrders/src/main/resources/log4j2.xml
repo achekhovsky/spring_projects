@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" strict="true"
+	name="XMLConfigTest">
+	<Properties>
+		<Property name="filename">middle.log</Property>
+	</Properties>
+
+	<Appenders>
+		<Appender type="Console" name="STDOUT" target="SYSTEM_OUT">
+			<Layout type="PatternLayout">
+				<Pattern>%d %p %C{1.} [%t] %m</Pattern>
+			</Layout>
+		</Appender>
+		
+		<Appender type="File" name="File" fileName="${filename}" append="false">
+			<Layout type="PatternLayout">
+				<Pattern>%d %p %C{3.} [%t] %m%n</Pattern>
+			</Layout>
+			<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+		</Appender>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="customLog" level="error"
+			additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>	
+
+		<Root level="all">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</Loggers>
+
+</Configuration>
