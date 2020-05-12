@@ -1,4 +1,4 @@
-package com.custom.spring.database;
+package com.custom.spring.services;
 
 public enum StoreActions {
 	ALL("getOrders"),

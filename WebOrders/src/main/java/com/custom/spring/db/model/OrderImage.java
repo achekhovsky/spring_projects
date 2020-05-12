@@ -1,4 +1,4 @@
-package com.custom.spring.entities;
+package com.custom.spring.db.model;
 
 import java.io.Serializable;
 
@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -25,10 +26,10 @@ public class OrderImage implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Version //jpa
+	@Version 
 	@ColumnDefault("0")
 	private long version;
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "img", nullable = true, insertable = true, updatable = true, unique = false)
@@ -82,6 +83,14 @@ public class OrderImage implements Serializable {
 	 */
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+	
+	/* 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "OrderImage [version=" + version + ", id=" + id + ", image=" + img + "]";
 	}
 }   
 

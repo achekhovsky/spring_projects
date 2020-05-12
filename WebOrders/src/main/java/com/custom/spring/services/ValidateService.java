@@ -3,17 +3,27 @@ package com.custom.spring.services;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.custom.spring.database.HiberStore;
-import com.custom.spring.database.StoreActions;
-import com.custom.spring.entities.Order;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import com.custom.spring.configuration.JpaConfiguration;
+import com.custom.spring.db.model.Order;
+import com.custom.spring.db.services.OrderService;
 
 public class ValidateService {
-	private static final com.custom.spring.database.Store<Order> STORE = HiberStore.getInstance();
+	
+	private AnnotationConfigApplicationContext ctx;
+	private OrderService<Order> store;
 	
 	private final Map<StoreActions, java.util.function.Supplier<Object>> actions = new HashMap<>();
 	private Order ord = null;
 	
 	public ValidateService() {
+		ctx = new AnnotationConfigApplicationContext();
+		ctx.getEnvironment().setActiveProfiles("production");
+		ctx.register(JpaConfiguration.class);
+		ctx.refresh();
+		store = ctx.getBean(OrderService.class);
+		
 		actions.put(StoreActions.ALL, this::getOrders);
 		actions.put(StoreActions.NOTRDY, this::getNotRdyOrders);
 		actions.put(StoreActions.ADD, this::add);
@@ -26,24 +36,24 @@ public class ValidateService {
 	}
 	
 	private boolean add() {
-		return STORE.add(this.getOrd());
+		return store.add(this.getOrd());
 	}
 	
 	private boolean deleteOrder() {
-		return STORE.deleteOrder(this.getOrd().getId());
+		return store.deleteOrder(this.getOrd().getId());
 		
 	}
 	
 	private boolean updateStatus() {
-		return STORE.updateStatus(this.getOrd().getId(), this.ord.isDone());
+		return store.updateStatus(this.getOrd().getId(), this.ord.isDone());
 	}
 	
 	private Order[] getOrders() {
-		return STORE.getOrders();
+		return store.getOrders();
 	}
 	
 	private Order[] getNotRdyOrders() {
-		return STORE.getNotRdyOrders();
+		return store.getNotRdyOrders();
 	}
 	
 	public Order getOrd() {

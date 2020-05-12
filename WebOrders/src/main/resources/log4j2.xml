@@ -2,7 +2,7 @@
 <Configuration status="warn" strict="true"
 	name="XMLConfigTest">
 	<Properties>
-		<Property name="filename">middle.log</Property>
+		<Property name="filename">orders.log</Property>
 	</Properties>
 
 	<Appenders>
@@ -16,19 +16,32 @@
 			<Layout type="PatternLayout">
 				<Pattern>%d %p %C{3.} [%t] %m%n</Pattern>
 			</Layout>
-			<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
-			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+<!--			Filtering trace, warn, fatal levels 
+			<Filters>
+				<ThresholdFilter level="debug" onMatch="NEUTRAL" onMismatch="DENY"/>
+				<ThresholdFilter level="info" onMatch="NEUTRAL" onMismatch="ACCEPT"/>
+				<ThresholdFilter level="warn" onMatch="NEUTRAL" onMismatch="ACCEPT"/>
+				<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+				<ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+			</Filters> -->
+<!--			Filtering trace, debug, warn, fatal levels  -->
+			<Filters>
+				<ThresholdFilter level="info" onMatch="NEUTRAL" onMismatch="DENY"/>
+				<ThresholdFilter level="warn" onMatch="NEUTRAL" onMismatch="ACCEPT"/>
+				<ThresholdFilter level="error" onMatch="NEUTRAL" onMismatch="DENY"/>
+				<ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+			</Filters>
 		</Appender>
 	</Appenders>
 
 	<Loggers>
-		<Logger name="customLog" level="error"
-			additivity="false">
+		<Logger name="customLog" level="trace" additivity="false">
 			<AppenderRef ref="File" />
 		</Logger>	
 
 		<Root level="all">
-			<AppenderRef ref="STDOUT" />
+			<!--<AppenderRef ref="File" level="trace"/>-->
+			<AppenderRef ref="STDOUT" level="warn"/>
 		</Root>
 	</Loggers>
 

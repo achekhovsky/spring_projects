@@ -1,4 +1,4 @@
-package com.custom.spring.database;
+package com.custom.spring.db;
 
 import java.time.LocalDate;
 

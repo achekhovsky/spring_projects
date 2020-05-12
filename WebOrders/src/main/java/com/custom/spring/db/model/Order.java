@@ -1,4 +1,4 @@
-package com.custom.spring.entities;
+package com.custom.spring.db.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -23,11 +24,11 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-import com.custom.spring.database.LDConverter;
-import com.custom.spring.database.jpa.listeners.OrderListener;
+import com.custom.spring.db.LDConverter;
+import com.custom.spring.db.jpa.listeners.OrderListener;
 
-@EntityListeners({OrderListener.class}) //jpa
-@Entity //jpa
+@EntityListeners({OrderListener.class}) 
+@Entity 
 @Table(name = "j4jorders")
 @NamedQueries({@NamedQuery(
 		name = Order.DELETE_ORDER,
@@ -37,7 +38,10 @@ import com.custom.spring.database.jpa.listeners.OrderListener;
 		query = "SELECT o FROM Order o"),
 @NamedQuery(
 		name = Order.SELECT_NOT_RDY,
-		query = "SELECT o FROM Order o WHERE o.done IS false")
+		query = "SELECT o FROM Order o WHERE o.done IS false"),
+@NamedQuery(
+		name = Order.SELECT_BY_NAME,
+		query = "SELECT o FROM Order o WHERE o.name = :oNm")
 })
 public class Order implements Serializable { 
 	/**
@@ -48,19 +52,21 @@ public class Order implements Serializable {
 	public static final String SELECT_ORDERS = "SELECT_ORDERS";
 	public static final String DELETE_ORDER = "DELETE_ORDER";
 	public static final String SELECT_NOT_RDY = "SELECT_NOT_RDY";
+	public static final String SELECT_BY_NAME = "SELECT_BY_NAME";
 	
-	@Version //jpa
+	@Version 
 	@ColumnDefault("0")
 	private long version; 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name = "createDate", columnDefinition = "text", nullable = false, insertable = true, updatable = true, unique = false, length = 10)
 	@Convert(converter = LDConverter.class)
 	private LocalDate createDate;
-	@OrderBy("name DESC") //jpa
+	@OrderBy("name DESC") 
 	private String name;
 	private String description;
-	@ColumnDefault("false") //hibernate 
+	@ColumnDefault("false") 
 	private boolean done;
 	@OneToOne(
 			orphanRemoval = true,  

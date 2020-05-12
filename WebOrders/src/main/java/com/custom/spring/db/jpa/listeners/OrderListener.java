@@ -1,10 +1,10 @@
-package com.custom.spring.database.jpa.listeners;
+package com.custom.spring.db.jpa.listeners;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-import com.custom.spring.entities.Order;
+import com.custom.spring.db.model.Order;
 
 public class OrderListener {
 	@PrePersist

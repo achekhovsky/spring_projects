@@ -24,10 +24,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.custom.spring.database.StoreActions;
-import com.custom.spring.entities.Order;
-import com.custom.spring.entities.OrderImage;
+import com.custom.spring.db.model.Order;
+import com.custom.spring.db.model.OrderImage;
 import com.custom.spring.json.Parser;
+import com.custom.spring.services.StoreActions;
 import com.custom.spring.services.ValidateService;
 
 /**

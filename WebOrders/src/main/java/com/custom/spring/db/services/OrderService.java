@@ -1,12 +1,11 @@
-package com.custom.spring.database;
+package com.custom.spring.db.services;
 
-import com.custom.spring.entities.Order;
-
-public interface Store<T> {
+public interface OrderService<T> {
+	T findById(int id);
+	T findByName(String name);
 	boolean add(T plc);
 	boolean deleteOrder(int id);
 	boolean updateStatus(int id, boolean status);
 	T[] getOrders();
 	T[] getNotRdyOrders();
 }
-
