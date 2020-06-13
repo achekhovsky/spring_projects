@@ -2,46 +2,32 @@ package ru.job4j.database;
 
 import static org.junit.Assert.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.custom.spring.configuration.JpaConfiguration;
+import com.custom.spring.configuration.WebAppConfig;
 import com.custom.spring.db.model.Order;
 import com.custom.spring.db.model.OrderImage;
 import com.custom.spring.db.services.OrderService;
-import com.custom.spring.db.services.OrderServiceImpl;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(classes = {WebAppConfig.class})
+@ActiveProfiles(value = "test")
 public class DBInteractionTest {
 	private static final org.apache.logging.log4j.Logger LOG = LogManager.getLogger(DBInteractionTest.class.getName());
-	
-	private AnnotationConfigApplicationContext ctx;
+	@Autowired
 	private OrderService<Order> ordServ;
-	
-	@SuppressWarnings("unchecked")
-	@Before
-	public void setUp() throws Exception {
-		ctx = new AnnotationConfigApplicationContext();
-		ctx.getEnvironment().setActiveProfiles("test");
-		ctx.register(JpaConfiguration.class);
-		ctx.refresh();
-		ordServ = ctx.getBean(OrderService.class);
-		assertNotNull(ordServ);
-	}
-	
-	@After
-	public void tearDown() {
-		ctx.close();
-	}
+	@Autowired
+	private WebApplicationContext wac;
 	
 	@Test
 	public void shouldFindAllOrders() throws Exception {

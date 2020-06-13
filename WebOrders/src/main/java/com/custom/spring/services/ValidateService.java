@@ -3,27 +3,24 @@ package com.custom.spring.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.custom.spring.configuration.JpaConfiguration;
 import com.custom.spring.db.model.Order;
 import com.custom.spring.db.services.OrderService;
 
+@Component
 public class ValidateService {
 	
-	private AnnotationConfigApplicationContext ctx;
+	@Autowired
 	private OrderService<Order> store;
 	
 	private final Map<StoreActions, java.util.function.Supplier<Object>> actions = new HashMap<>();
 	private Order ord = null;
 	
 	public ValidateService() {
-		ctx = new AnnotationConfigApplicationContext();
-		ctx.getEnvironment().setActiveProfiles("production");
-		ctx.register(JpaConfiguration.class);
-		ctx.refresh();
-		store = ctx.getBean(OrderService.class);
-		
 		actions.put(StoreActions.ALL, this::getOrders);
 		actions.put(StoreActions.NOTRDY, this::getNotRdyOrders);
 		actions.put(StoreActions.ADD, this::add);

@@ -1,9 +1,7 @@
-package com.custom.spring.servlets;
+package com.custom.spring.mvc.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.Optional;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +20,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.custom.spring.db.model.Order;
 import com.custom.spring.db.model.OrderImage;
@@ -30,25 +34,30 @@ import com.custom.spring.json.Parser;
 import com.custom.spring.services.StoreActions;
 import com.custom.spring.services.ValidateService;
 
-/**
- * Servlet implementation class HallController
- */
-public class OrdersController extends HttpServlet {
+
+@Controller
+@RequestMapping("/")
+public class OrdersController {
 	private static final Logger LOG = LogManager.getLogger("customLog");
-	private static final long serialVersionUID = 1L;
-	private final ValidateService vs = new ValidateService();
+	@Autowired
+	private ValidateService vs;
 	
+	@Autowired
+	ServletContext context;
 	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method = RequestMethod.GET)
+	public String provideGet(Model model) {
+		return "/";
 	}
 	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method = RequestMethod.POST)
+	public String providePost(Model model) {
+		return "/";
+	}
+	
+	@RequestMapping(value = {"/orders"}, method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	public void processOrders(HttpServletResponse response, HttpServletRequest request, Model uiModel) {
 		WebPageParsedParams parsed = fileUpload(createFileUploadHandler(request), request);
 		response.setContentType("text/plain");
 		String action = parsed.getParams().get("getAction");
@@ -60,7 +69,7 @@ public class OrdersController extends HttpServlet {
 			try {
 				ord.setId(Integer.parseInt(parsed.getParams().get("id")));
 			} catch (NumberFormatException e) {
-				LOG.log(Level.ERROR, "OrdersController::doPost " + e.getMessage());
+				LOG.log(Level.ERROR, "OrdersController::provide " + e.getMessage());
 				ord.setId(0);
 			}
 			ord.setDone(Boolean.parseBoolean(parsed.getParams().get("done")));
@@ -68,12 +77,15 @@ public class OrdersController extends HttpServlet {
 			vs.setOrd(ord);
 			vs.doAction(action);
 		}
-		if (hideRdy) {
-			this.sendData(response, Parser.parseToJson(vs.doAction("NOTRDY")));			
-		} else {
-			this.sendData(response, Parser.parseToJson(vs.doAction("ALL")));	
-		}
-		doGet(request, response);
+		try {
+			if (hideRdy) {
+				this.sendData(response, Parser.parseToJson(vs.doAction("NOTRDY")));			
+			} else {
+				this.sendData(response, Parser.parseToJson(vs.doAction("ALL")));	
+			}
+		} catch (ServletException | IOException e) {
+			LOG.log(Level.ERROR, "OrdersController::provide " + e.getMessage());
+		}	
 	}
 	
 	private void sendData(HttpServletResponse response, String data) throws ServletException, IOException {
@@ -89,8 +101,7 @@ public class OrdersController extends HttpServlet {
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// Configure a repository (to ensure a secure temp location is used)
-		ServletContext servletContext = this.getServletConfig().getServletContext();
-		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		File repository = (File) context.getAttribute("javax.servlet.context.tempdir");
 		factory.setRepository(repository);
 		return new ServletFileUpload(factory);
 	}
@@ -111,7 +122,7 @@ public class OrdersController extends HttpServlet {
 			    }
 			}
 		} catch (FileUploadException e) {
-			e.printStackTrace();
+			LOG.log(Level.ERROR, "OrdersController::fileUpload" + e.getMessage());
 		}
 		return prms;
 	}
