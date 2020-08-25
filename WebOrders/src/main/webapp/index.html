@@ -13,6 +13,7 @@
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="js/index.js"></script>
+<script src="js/templates.js"></script>
 
 <script lang="javascript">
 	window.onload = function() {
@@ -39,7 +40,7 @@
 					<th class="text-center">status</th>
 					<th class="text-center">
 			<div class="row float-right">
-			    <input type="checkbox" onchange="return setHideRdyMode(checked)"> Hide ready
+			    <input type="checkbox" onchange="setHideRdyMode(checked); doAction('orders', '', null);"> Hide ready
 			</div>
 				</th>
 				</tr>
@@ -50,7 +51,7 @@
 </div>
 
 			<br>
-		<form class="form-signin" name="createOrder" action="index.html" method="POST"
+		<form class="form-signin" name="createOrder" action="index.html" method="POST" 
 			id="createForm" onsubmit="return findEmptyInputs()">
 			
 			<div class="row justify-content-center">
@@ -58,7 +59,7 @@
 			<h4 class="h4 text-center mb-4 font-weight-normal">Create order</h3>
 			<div class="form-row mb-4">
 				<img src="" class="rounded mx-auto d-block border border-info" id="orderImage" alt="" width="75px" height="75px">
-				<input id="imageFile" name="image" type="file" onchange="changeFile(event, 'orderImage')" accept=".gif, .png, .jpg, .jpeg"/>
+				<input id="imageFile" name="OrderImage" type="file" onchange="changeFile(event, 'orderImage')" accept=".gif, .png, .jpg, .jpeg"/>
 			</div>
 			<div class="form-row mb-4">
 			 <div class="col">
@@ -77,7 +78,7 @@
                 <div class="input-group-prepend">
          			<div class="input-group-text">name:</div>
         		</div>
-				<input class="form-control" id="orderName" name="ordername" placeholder="" value="" type="text">
+				<input class="form-control" id="orderName" name="name" placeholder="" value="" type="text">
                 <div class="invalid-feedback">
                   Please fill out this field.
               </div>
@@ -91,7 +92,7 @@
                 <div class="input-group-prepend">
          			<div class="input-group-text">description:</div>
         		</div>
-                <input class="form-control" id="orderDescription" name="orderdescription" placeholder="" value="" type="text">
+                <input class="form-control" id="orderDescription" name="description" placeholder="" value="" type="text">
                 <div class="invalid-feedback">
                   Valid description is required.
                 </div>

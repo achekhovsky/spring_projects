@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService<Order> {
 			}
 			em.persist(ord);
 		} catch (Exception ex) {
-			LOG.log(Level.ERROR, "HiberStore::add: " + ex.fillInStackTrace().toString());
+			LOG.log(Level.ERROR, "OrderServiceImpl::add: " + ex.fillInStackTrace().toString());
 			ex.printStackTrace();
 		} 
 		return false;
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService<Order> {
 			Order forDel = em.getReference(Order.class, id);
 			em.remove(forDel);
 		} catch (Exception ex) {
-			LOG.log(Level.ERROR, "HiberStore::deleteOrder: " + ex.getMessage());
+			LOG.log(Level.ERROR, "OrderServiceImpl::deleteOrder: " + ex.getMessage());
 			ex.printStackTrace();
 		} 
 		return false;
@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService<Order> {
 			forUpd.setDone(status);
 			em.persist(forUpd);
 		} catch (Exception ex) {
-			LOG.log(Level.ERROR, "HiberStore::updateStatus: " + ex.getMessage());
+			LOG.log(Level.ERROR, "OrderServiceImpl::updateStatus: " + ex.getMessage());
 			ex.printStackTrace();
 		} 
 		return false;
@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService<Order> {
 		try {
 			orders = em.createNamedQuery(Order.SELECT_ORDERS, Order.class).getResultList();
 		} catch (Exception ex) {
-			LOG.log(Level.ERROR, "HiberStore::getOrders: " + ex.getMessage());
+			LOG.log(Level.ERROR, "OrderServiceImpl::getOrders: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 		return orders == null ? null : orders.toArray(new Order[orders.size()]);
@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService<Order> {
 		try {
 			orders = em.createNamedQuery(Order.SELECT_NOT_RDY, Order.class).getResultList();
 		} catch (Exception ex) {
-			LOG.log(Level.ERROR, "HiberStore::getNotRdyOrders: " + ex.getMessage());
+			LOG.log(Level.ERROR, "OrderServiceImpl::getNotRdyOrders: " + ex.getMessage());
 			ex.printStackTrace();
 		} 
 		return orders.toArray(new Order[orders.size()]);

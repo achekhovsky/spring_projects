@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.custom.spring.configuration.JpaConfiguration;
 import com.custom.spring.db.model.Order;
 import com.custom.spring.db.services.OrderService;
 
-@Component
+@Service
 public class ValidateService {
 	
 	@Autowired

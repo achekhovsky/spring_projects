@@ -37,53 +37,89 @@ function getCheckboxesValues(formId) {
 	return formCheckboxes; 
 }
 
-function processParamsToSendd(action, formId) {
+async function processParamsToSendd(action, formId) {
 	let frmData;
 	if(formId) {
-		frmData = new FormData(document.getElementById(formId));
-		let cbs = getCheckboxesValues(formId);
-		for(let key in cbs) {
-			frmData.set(key, cbs[key]);
+		frmData = convertFormDataCheckboxes(formId);
+		for(let key of frmData.keys()) {
+			if(frmData.get(key) instanceof File) {
+				const promiseFile = convertFileToBlob(frmData.get(key));
+				const loadedFile = await promiseFile;
+				frmData.append("img", loadedFile);
+				frmData.delete(key);
+			}
 		}
 	}  else {
 		frmData = new FormData();
 	}
-	frmData.append("getAction", action);
+	frmData.append("action", action);
 	frmData.append("hideRdy", hideRdy);
 	return frmData;
+}
+
+function doAction(url, action, formId) {
+	processParamsToSendd(action, formId).then((result) => {
+		$.ajax({
+			type:"POST",
+			url: url,
+			processData: false, 
+			contentType: "application/json;charset=utf-8",
+			data: separateObjectsAndStringify(
+				Object.fromEntries(result.entries()),
+				new Order(), 
+				new OrderImage(),
+				new Actions()),
+			success: function (data) {	
+				for(let ordd in ORDERS) {
+				let orderToString = "";
+					for(let key in ORDERS[ordd]) {
+						orderToString += "[" + key + "]" + ORDERS[ordd][key] + " ";	
+					}
+				}
+				if(data.length != 0) { 
+					console.log("------> " + data.toString());
+					ORDERS = data;
+				} else {
+					ORDERS = null;	
+				}
+				setRows("orderstable", ORDERS);
+		}});
+	});
+}
+
+function convertFormDataCheckboxes(formId) {
+	let frmData = new FormData(document.getElementById(formId));
+	let cbs = getCheckboxesValues(formId);
+	for(let key in cbs) {
+		frmData.set(key, cbs[key]);
+	}
+	return frmData;
+}
+
+function convertFileToBlob(file) {
+	return  new Promise((resolve, reject) => {
+		let reader = new FileReader();
+		reader.onload = function() {
+			resolve(window.btoa(reader.result));
+		};
+		reader.onerror = function() {
+			reject("error");
+		};
+		reader.readAsBinaryString(file);
+	})
+	.then(
+		(r) => {
+			return r;
+		}, 
+		(e) => {
+			return e;
+	});
 }
 
 function setHideRdyMode(mode) {
 	if(typeof(mode) == "boolean") {
 		hideRdy = mode;
 	}
-}
-
-function doAction(url, action, formId) {
-	$.ajax({
-		type:"POST",
-		url: url,
-		processData: false, 
-		contentType: false,
-		data: processParamsToSendd(action, formId),
-		success: function (data) {	
-			console.log("doAction[" + action + "], orders:");
-			for(let ordd in ORDERS) {
-			let orderToString = "";
-				for(let key in ORDERS[ordd]) {
-					orderToString += "[" + key + "]" + ORDERS[ordd][key] + " ";	
-				}
-			console.log(orderToString + "\n");
-			}
-			console.log("<----data----");
-			console.log(data);
-			console.log("----data---->");
-			if(data.length != 0) { 
-  				ORDERS = JSON.parse(data);
-			}
-			setRows("orderstable", ORDERS);
-		}});
-		return false;
 }
 
 function findEmptyInputs() {
@@ -113,7 +149,6 @@ function clearTable(tableId) {
 
 function setRows(tableId, orders) {
 	clearTable(tableId);
-	console.log("setRows:" + ORDERS);
 	if(orders instanceof Array) {
 		orders.forEach(function (item) {
 			addRow(document.getElementById(tableId), item);
@@ -160,7 +195,7 @@ function addRow(table, order) {
 		td.style.textAlign = "right";
 		let btn = document.createElement("button");
 		btn.className = "btn btn-outline-danger btn-sm";
-		btn.name = "getAction";
+		btn.name = "action";
 		btn.value = "deleteOrder"; 
 		btn.type = "button";
 		btn.formMethod = "post";
@@ -240,6 +275,9 @@ function setFileListener(inpFile, img) {
 	      let fr = new FileReader();
 	      fr.addEventListener("load", function () {
 		      img.src = fr.result;
+		      img.image = fr.result;
+		      img.img = fr.result;
+		      img.orderImage = fr.result;
 	      }, false);
 	      fr.readAsDataURL(files[0]);                                                  
 	  }

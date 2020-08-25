@@ -4,14 +4,13 @@ import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.custom.spring.configuration.WebAppConfig;
+import com.custom.spring.configuration.SimpleUrlHandlerMappingConfig;;
+
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	
@@ -21,17 +20,6 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         servletContext.setInitParameter("spring.profiles.active", "production");
     }
     
-	@Bean
-	public RequestMappingHandlerAdapter getRequestAdapter() {
-		return new RequestMappingHandlerAdapter();
-	}
-	
-	@Bean
-	public SimpleControllerHandlerAdapter getSimpleControllerAdapter() {
-		return new SimpleControllerHandlerAdapter();
-	}
-	
-
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		return new Class<?>[] {WebAppConfig.class};

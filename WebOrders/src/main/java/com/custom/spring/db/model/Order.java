@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -26,6 +25,12 @@ import org.hibernate.annotations.NamedQuery;
 
 import com.custom.spring.db.LDConverter;
 import com.custom.spring.db.jpa.listeners.OrderListener;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @EntityListeners({OrderListener.class}) 
 @Entity 
@@ -62,6 +67,8 @@ public class Order implements Serializable {
 	private int id;
 	@Column(name = "createDate", columnDefinition = "text", nullable = false, insertable = true, updatable = true, unique = false, length = 10)
 	@Convert(converter = LDConverter.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate createDate;
 	@OrderBy("name DESC") 
 	private String name;
@@ -88,6 +95,14 @@ public class Order implements Serializable {
 		this.done = false;
 		this.image = null;
 	}
+	
+/*	public Order(String name, String description, byte[] image) {
+		this.createDate = LocalDate.now();
+		this.name = name;
+		this.description = description;
+		this.done = false;
+		this.image = new OrderImage(image);
+	}*/
 	
 	public Order(String createDate, String name, String description, boolean done) {
 		this.createDate = LocalDate.parse(createDate);
@@ -153,10 +168,12 @@ public class Order implements Serializable {
 	/**
 	 * @return the createDate
 	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public LocalDate getCreateDate() {
 		return createDate;
 	}
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public void setCreateDate(LocalDate ldate) {
 		this.createDate = ldate;
 	}
@@ -220,7 +237,14 @@ public class Order implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Order [version=" + version + ", id=" + id + ", createDate=" + createDate + ", name=" + name
-				+ ", description=" + description + ", done=" + done + "]";
+		String result = String.format(
+				"Order [version=%s, id=%s, createDate=%s, name=%s, description=%s, done=%s]", 
+				version,
+				id,
+				createDate, 
+				name,
+				description,
+				done);
+		return result;
 	}
 }
