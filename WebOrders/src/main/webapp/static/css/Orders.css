@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+footer {
+  vertical-align: bottom;
+  letter-spacing: 0px;
+  font-size: x-small;
+  position: absolute;
+  bottom: 0px;
+  text-align: right;
+  right: 0px;
+}
+
+.leftFooter {
+  vertical-align: bottom;
+  letter-spacing: 0px;
+  font-size: x-small;
+  position: absolute;
+  bottom: 0px;
+  text-align: left;
+  left: 0px;
+}

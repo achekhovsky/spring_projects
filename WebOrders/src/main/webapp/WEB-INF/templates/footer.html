@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="ExecutionUtils">
+		<span th:text="'Template name - ' + ${#execInfo.templateName}"> Template name </span>
+		<br>
+		<span th:text="'Template mode - ' + ${#execInfo.templateMode}"> Template mode </span>
+		<br>
+		<span th:text="'Test attribute - ' + ${forThymeleafTest}">Test attribute</span>
+	</div>
+</body>
+</html>
+
+
+
+
+
