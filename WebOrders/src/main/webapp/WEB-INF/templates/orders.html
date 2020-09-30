@@ -5,34 +5,34 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="../../css/Orders.css" th:href="@{/static/css/Orders.css}" rel="stylesheet" />
-    <title>Orders (Thymeleaf)</title>
+	<link href="../../css/Orders.css" th:href="@{/static/css/Orders.css}" rel="stylesheet" />
+	<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+	<script src="static/js/jquery-3.3.1.min.js"></script>
+	<script src="static/bootstrap/js/bootstrap.js"></script>
+    <title>Orders</title>
 </head>
 <body>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="bootstrap/js/bootstrap.js"></script>
-<script src="js/index.js"></script>
-<script src="js/templates.js"></script>
-
+<script src="static/js/templates.js"></script>
+<script src="static/js/index.js"></script>
 <script lang="javascript">
 	window.onload = function() {
 		setTimeout(function timer() { 
-			doAction("orders", "", null);
+			doAction("processorders", "", null);
 			setTimeout(timer, 10000);
 		}, 100);	
 	}
 </script>
 
+<th:block th:insert="~{nav :: BootstrapNaviBar}">
+	NaviBar
+</th:block>
 
-<div class="container">
+<div class="container mt-5 mb-10">
         <h4 class="text-center">
             O R D E R S
         </h4>
     <div class="row pt-3">
-	<table id="orderstable" class="table table-borderless table-hover text-center table-sm">
+	<table class="table table-borderless table-hover text-center table-sm" id="orderstable">
 			<thead class="table-sm border-bottom">
 				<tr>
 					<th class="text-center">id</th>
@@ -40,9 +40,10 @@
 					<th class="text-center">name</th>
 					<th class="text-center">description</th>
 					<th class="text-center">status</th>
+					<th class="text-center"></th>
 					<th class="text-center">
 			<div class="row float-right">
-			    <input type="checkbox" onchange="setHideRdyMode(checked); doAction('orders', '', null);"> Hide ready
+			    <input type="checkbox" onchange="setHideRdyMode(checked); doAction('processorders', '', null);"> Hide ready
 			</div>
 				</th>
 				</tr>
@@ -50,20 +51,24 @@
 		<tbody>	</tbody>
 	</table>  
     </div>
-</div>
+
 
 			<br>
 		<form class="form-signin" name="createOrder" action="index.html" method="POST" 
 			id="createForm" onsubmit="return findEmptyInputs()">
 			
 			<div class="row justify-content-center">
-			<div class="col-4">
+			<div class="col-7">
 			<h4 class="h4 text-center mb-4 font-weight-normal">Create order</h3>
-			<div class="form-row mb-4">
-				<img src="" class="rounded mx-auto d-block border border-info" id="orderImage" alt="" width="75px" height="75px">
-				<input id="imageFile" name="OrderImage" type="file" onchange="changeFile(event, 'orderImage')" accept=".gif, .png, .jpg, .jpeg"/>
+			<div class="form-row">
+			<div class="col-4 mxy-0 px-0 w-100 rounded bg-secondary">
+				<img class="rounded border-primary img-fluid mx-auto d-block" src="" id="orderImage" alt="">
+				<div class="position-absolute fixed-top w-100 h-100 vh-100 transparent">
+					<input class="custom-file-input h-100" id="imageFile" name="OrderImage" type="file" onchange="changeFile(event, 'orderImage')" accept=".gif, .png, .jpg, .jpeg"/>
+				</div> 
 			</div>
-			<div class="form-row mb-4">
+			<div class="col-8">
+			<div class="form-row mb-2">
 			 <div class="col">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -75,7 +80,9 @@
                 </div>
               </div>
               </div>
-              <div class="col">
+   		  	</div>
+   		  	<div class="form-row mb-2">
+   		      <div class="col">
               <div class="input-group">
                 <div class="input-group-prepend">
          			<div class="input-group-text">name:</div>
@@ -85,10 +92,9 @@
                   Please fill out this field.
               </div>
               </div>
-            </div>
+              </div>
    		  	</div>
-   		  	
-   		  	<div class="form-row mb-4">
+   		  	<div class="form-row">
    		  	  <div class="col">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -101,16 +107,18 @@
               </div>
               </div>
    		  	</div>
-
+   		  	</div>
+   		  	</div>
+			<hr class="my-4">
    		  	<div class="row justify-content-end">
-   		  	<div>
-        		<button id="pay" type="button" class="btn btn-success" onclick="return doAction('orders', 'ADD', 'createForm')">Add</button>
-			</div>
+   		  	<!-- btn btn-success -->
+        		<button class="btn btn-primary btn-block mx-2" id="pay" type="button" onclick="return doAction('processorders', 'ADD', 'createForm')">Add</button>
 			</div>
 			</div>
 			</div>
 		</form>
-		<footer th:insert="~{footer :: ExecutionUtils}">
+		</div>
+		<footer class="position-relative mb-3" th:insert="~{footer :: ExecutionUtilsFooter}">
 			<p > Footer </p>
 		</footer>
 </body>

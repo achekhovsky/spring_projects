@@ -4,21 +4,26 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.custom.spring.db.model.Order;
 
 public class OrderListener {
+	private static final Logger LOG = LogManager.getLogger("customLog");
+	
 	@PrePersist
 	void prePersist(Order ord) {
-		System.out.println("Order in the prePersist process - " + ord);
+		LOG.info("OrderListener::prePersist Order in the prePersist process - " + ord);
 	}
 
 	@PreUpdate
 	void preUpdate(Order ord) {
-		System.out.println("Order in the preUpdate process - " + ord);
+		LOG.info("OrderListener::preUpdate Order in the preUpdate process - " + ord);
 	}
 
 	@PreRemove
 	void preRemove(Order ord) {
-		System.out.println("Order in the preRemove process - " + ord);
+		LOG.info("OrderListener::preRemove Order in the preRemove process - " + ord);
 	}
 }

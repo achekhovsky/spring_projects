@@ -19,3 +19,19 @@ footer {
   text-align: left;
   left: 0px;
 }
+
+.transparent { 
+  outline: non;
+  opacity: 0;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.transparent:hover { 
+  outline: non;
+  opacity: 1;
+  border:3px solid lightblue;
+  border-radius: 4px;
+  box-shadow: none;
+  background-color: transparent;
+}

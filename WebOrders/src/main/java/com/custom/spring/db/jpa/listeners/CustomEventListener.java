@@ -3,6 +3,8 @@ package com.custom.spring.db.jpa.listeners;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.event.spi.DeleteEvent;
 import org.hibernate.event.spi.DeleteEventListener;
@@ -14,11 +16,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomEventListener implements PersistEventListener, DeleteEventListener, MergeEventListener {
+	private static final Logger LOG = LogManager.getLogger("customLog");
 	private static final long serialVersionUID = 5850729336425310941L;
 
 	@Override
 	public void onMerge(MergeEvent event) throws HibernateException {
-		System.out.println("CustomEventListener::The MERGE process handled with the - " + event.getEntity());
+		LOG.info("CustomEventListener::onMerge The MERGE process handled with the - " + event.getEntity());
 	}
 
 	@Override
@@ -29,7 +32,7 @@ public class CustomEventListener implements PersistEventListener, DeleteEventLis
 
 	@Override
 	public void onDelete(DeleteEvent event) throws HibernateException {
-		System.out.println("CustomEventListener::The DELETE process handled with the - " + event.getObject());		
+		LOG.info("CustomEventListener::onDelete The DELETE process handled with the - " + event.getObject());
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class CustomEventListener implements PersistEventListener, DeleteEventLis
 
 	@Override
 	public void onPersist(PersistEvent event) throws HibernateException {
-		System.out.println("CustomEventListener::The PERSIST process handled with the - " + event.getObject());		
+		LOG.info("CustomEventListener::onPersist The PERSIST process handled with the - " + event.getObject());
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,11 +21,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.custom.spring.configuration.JpaConfiguration;
+import com.custom.spring.configuration.SecurityConfiguration;
 import com.custom.spring.configuration.WebAppConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebAppConfig.class, JpaConfiguration.class})
+@ContextConfiguration(classes = {WebAppConfig.class, JpaConfiguration.class, SecurityConfiguration.class})
+@WithMockUser(username = "user", roles = {"USER"})
 @ActiveProfiles(value = "test")
 public class ControllerTest {
 	@Autowired
@@ -41,7 +44,7 @@ public class ControllerTest {
 	@Test
 	public void ifGetAllThenTwoOrdersInResult() throws Exception {
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-				.post("/orders")
+				.post("/processorders")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content("{\"order\":{},"
 						+ "\"actions\":{\"action\":\"ALL\", \"hideRdy\":\"false\"},"
@@ -58,7 +61,7 @@ public class ControllerTest {
 	@Test
 	public void ifDeleteOneOrderThenOneOrderInResult() throws Exception {
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-				.post("/orders")
+				.post("/processorders")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content("{\"order\":{\"id\":1, \"name\":\"order_1\", \"description\":\"description_1\"},"
 						+ "\"actions\":{\"action\":\"DELETE\", \"hideRdy\":\"false\"},"

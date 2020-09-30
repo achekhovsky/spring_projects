@@ -77,12 +77,11 @@ function doAction(url, action, formId) {
 					}
 				}
 				if(data.length != 0) { 
-					console.log("------> " + data.toString());
 					ORDERS = data;
 				} else {
 					ORDERS = null;	
 				}
-				setRows("orderstable", ORDERS);
+				setRows("orderstable", ORDERS, url);
 		}});
 	});
 }
@@ -147,16 +146,16 @@ function clearTable(tableId) {
 	document.getElementById(tableId).tBodies[0].innerHTML = "";
 }
 
-function setRows(tableId, orders) {
+function setRows(tableId, orders, url) {
 	clearTable(tableId);
 	if(orders instanceof Array) {
 		orders.forEach(function (item) {
-			addRow(document.getElementById(tableId), item);
+			addRow(document.getElementById(tableId), item, url);
 		});
 	}
 }
 
-function addRow(table, order) {
+function addRow(table, order, url) {
 	var row = document.createElement("tr");
 	var frm = document.createElement("form");
 	frm.id = order['id'];
@@ -174,7 +173,7 @@ function addRow(table, order) {
 				inp.type = "checkbox";
 				inp.checked = order[key];
 				inp.addEventListener("change", function() {
-					doAction("orders", "UPDATE", order['id']);
+					doAction(url, "UPDATE", order['id']);
 				});
 			} else if (key == "image") {
 				inp = document.createElement("img"); 
@@ -202,7 +201,7 @@ function addRow(table, order) {
 		btn.setAttribute('form', order['id']);
 		btn.textContent = "Delete";
 		btn.addEventListener("click", function() {
-			doAction("orders", "DELETE", order['id']);
+			doAction(url, "DELETE", order['id']);
 		});
 		frm.insertAdjacentElement("beforeEnd", btn);
 		td.insertAdjacentElement("beforeEnd", btn);
@@ -211,44 +210,6 @@ function addRow(table, order) {
 		table.insertAdjacentElement("beforeEnd", document.createElement("tbody"));
 	} 
 	table.tBodies[0].insertAdjacentElement("beforeEnd", row);
-}
-
-function stringToBuffer(string) {
-	    var string = btoa(unescape(encodeURIComponent(string))),
-	            charList = string.split(''),
-		            buffer = [];
-	        for (var i = 0; i < charList.length; i++) {
-			        buffer.push(charList[i].charCodeAt(0));
-				    }
-		    return buffer;
-}
-
-function convertToImage(buffer, onLoad) {
-  var mime;
-  var a = new Uint8Array(buffer);
-  var nb = a.length;
-  if (nb < 4)
-      return null;
-  var b0 = a[0];
-  var b1 = a[1];
-  var b2 = a[2];
-  var b3 = a[3];
-  if (b0 == 0x89 && b1 == 0x50 && b2 == 0x4E && b3 == 0x47)
-	  mime = 'image/png';
-  else if (b0 == 0xff && b1 == 0xd8)
-	  mime = 'image/jpeg';
-  else if (b0 == 0x47 && b1 == 0x49 && b2 == 0x46)
-      	  mime = 'image/gif';
-  else
-  return null;
-  var binary = "";
-  for (var i = 0; i < nb; i++)
- 	 binary += String.fromCharCode(a[i]);
-  var base64 = window.btoa(binary);
-  var image = new Image();
-  image.onload = onLoad;
-  image.src = 'data:' + mime + ';base64,' + base64;
-  return image;
 }
 
 function setFileListener(inpFile, img) {
@@ -266,20 +227,20 @@ function setFileListener(inpFile, img) {
   }, false);
 }
   
-  function changeFile(event, imgId) {
-	    let i = 0,
-	    files = event.currentTarget.files,
-	    len = files.length,
-	    img = document.getElementById(imgId);
-	    for (; i < len; i++) {
-	      let fr = new FileReader();
-	      fr.addEventListener("load", function () {
-		      img.src = fr.result;
-		      img.image = fr.result;
-		      img.img = fr.result;
-		      img.orderImage = fr.result;
-	      }, false);
-	      fr.readAsDataURL(files[0]);                                                  
-	  }
+function changeFile(event, imgId) {
+    let i = 0,
+    files = event.currentTarget.files,
+    len = files.length,
+    img = document.getElementById(imgId);
+    for (; i < len; i++) {
+      let fr = new FileReader();
+      fr.addEventListener("load", function () {
+	      img.src = fr.result;
+	      img.image = fr.result;
+	      img.img = fr.result;
+	      img.orderImage = fr.result;
+      }, false);
+      fr.readAsDataURL(files[0]);                                                  
   }
+}
 

@@ -9,9 +9,9 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.custom.spring</groupId>
-  <artifactId>WebOrders</artifactId>
+  <artifactId>JavaWEB</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>WebOrders</name>
+  <name>JavaWEB</name>
   <url>http://maven.apache.org</url>
   
   <properties>
@@ -79,6 +79,11 @@
 	    <artifactId>spring-security-web</artifactId>
 	   <version>${springframework.version}</version>
 	</dependency>
+	<dependency> 
+       <groupId>org.springframework.security</groupId> 
+       <artifactId>spring-security-core</artifactId>           
+		<version>${springframework.version}</version> 
+	</dependency>   
 	<dependency>
 	    <groupId>org.springframework.security</groupId>
 	    <artifactId>spring-security-config</artifactId>
@@ -88,6 +93,12 @@
 	    <groupId>org.springframework.security</groupId>
 	    <artifactId>spring-security-taglibs</artifactId>
 	    <version>${springframework.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework.security</groupId>
+	    <artifactId>spring-security-test</artifactId>
+	    <version>${springframework.version}</version>
+	    <scope>test</scope>
 	</dependency>
 	<dependency>
 		 <groupId>org.springframework.test.htmlunit</groupId>
@@ -115,6 +126,11 @@
 	    <artifactId>thymeleaf-spring5</artifactId>
 	    <version>3.0.11.RELEASE</version>
 	</dependency>
+	<dependency>
+	    <groupId>org.thymeleaf.extras</groupId>
+	    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+	    <version>3.0.3.RELEASE</version>
+	</dependency>
   </dependencies>
   
   <repositories>
@@ -125,7 +141,7 @@
   </repositories>
   
   	<build>
-		<finalName>WebOrders</finalName>
+		<finalName>JavaWEB</finalName>
 		<plugins>
 			<!-- Eclipse project -->
 			<plugin>
@@ -147,7 +163,7 @@
 				<version>2.2</version>
 				<configuration>
 					<url>http://localhost:8080/manager/text</url>
-					<path>/WebOrders</path>
+					<path>/JavaWEB</path>
 					<server>tomcatserver</server>
 					<username>stomcat</username>
 					<password>ss3cret</password>

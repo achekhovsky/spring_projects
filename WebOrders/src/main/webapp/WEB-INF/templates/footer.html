@@ -1,17 +1,18 @@
 <!doctype html>
 <html lang="en"
-	  xmlns:th="http://www.thymeleaf.org">
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-	<div th:fragment="ExecutionUtils">
-		<span th:text="'Template name - ' + ${#execInfo.templateName}"> Template name </span>
-		<br>
-		<span th:text="'Template mode - ' + ${#execInfo.templateMode}"> Template mode </span>
-		<br>
-		<span th:text="'Test attribute - ' + ${forThymeleafTest}">Test attribute</span>
+	<div class="text-xs-left mx-1 px-1" th:fragment="ExecutionUtilsFooter">
+		<span class="text-muted" th:text="'Template name - ' + ${#execInfo.templateName}"> Template name </span><br>
+		<span class="text-muted" th:text="'Template mode - ' + ${#execInfo.templateMode}"> Template mode </span><br>
+		<span class="text-muted" th:text="'Test attribute - ' + ${forThymeleafTest}">Test attribute</span><br>
+		<!-- Thymeleaf-SpringSecurity utils -->
+		<span class="text-muted" th:text="'Username - ' + ${#authentication.name}">Username:</span><br>
+		<span class="text-muted" th:text="'Role - ' + ${#authentication.principal.authorities}">Role:</span><br>
 	</div>
 </body>
 </html>
-
 
 
 
