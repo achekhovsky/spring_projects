@@ -1,10 +1,14 @@
 package com.custom.spring.configuration;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,18 +20,23 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import com.custom.spring.mvc.converters.ResourceBundleMessageSourceToJson;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,8 +44,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.custom.spring.mvc"})
-@Import(JpaConfiguration.class)
+@Import({JpaConfiguration.class})
 public class WebAppConfig implements WebMvcConfigurer, ApplicationContextAware {
+	@Autowired
+	private ResourceBundleMessageSourceToJson messageBoundle;
 	
 	private ApplicationContext appContext;
 	
@@ -54,7 +65,7 @@ public class WebAppConfig implements WebMvcConfigurer, ApplicationContextAware {
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(new ByteArrayHttpMessageConverter());
-		converters.add(new StringHttpMessageConverter());
+		converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
 		converters.add(new ResourceHttpMessageConverter());
 		converters.add(new AllEncompassingFormHttpMessageConverter());
 	}
@@ -147,11 +158,51 @@ public class WebAppConfig implements WebMvcConfigurer, ApplicationContextAware {
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
     
+    //Spring security dialect for Thymeleaf
     @Bean
     public SpringSecurityDialect securityDialect() {
         return new SpringSecurityDialect();
+    }
+    
+    
+    //i18n
+    @Bean(name = "messageSource")
+    public MessageSource getMessageSource() {
+    	//ReloadableResourceBundleMessageSource messageBoundle = new ReloadableResourceBundleMessageSource();
+        // Set the base name for the messages properties file. 
+    	messageBoundle.setBasename("classpath:i18n/messages");
+    	messageBoundle.setDefaultEncoding("UTF-8");
+    	messageBoundle.setCacheSeconds(1);
+    	messageBoundle.setUseCodeAsDefaultMessage(true);
+        return messageBoundle;
+    }
+    
+    /* The localeResolver is used to resolve user locale data. 
+     * The CookieLocaleResolver object is used to save user locale information in browser cookie.*/
+    @Bean
+    public LocaleResolver localeResolver() {
+        CookieLocaleResolver clr = new CookieLocaleResolver();
+        // Set default locale value.
+        clr.setDefaultLocale(Locale.US);
+        // Set cookie max exist time.
+        clr.setCookieMaxAge(3600);
+        clr.setCookieSecure(true);
+    	return clr;
+    }
+    
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+    	LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+    	lci.setParamName("lang");
+    	return lci;
+    }
+    
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+    	registry.addInterceptor(localeChangeInterceptor());
     }
 }

@@ -1,29 +1,42 @@
 package com.custom.spring.configuration;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.springframework.web.context.ContextLoaderListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.web.Log4jServletContextListener;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.custom.spring.configuration.WebAppConfig;
+import com.custom.spring.mvc.filters.UrlLangAppenderFilter;
 import com.custom.spring.configuration.SimpleUrlHandlerMappingConfig;;
 
-
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+	private static final Logger LOG = LogManager.getLogger("customLog");
 	
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
+        
+        servletContext.addListener(Log4jServletContextListener.class);
+        servletContext.setInitParameter("isLog4jContextSelectorNamed", "false");
+        servletContext.setInitParameter("log4jConfiguration", "classpath:log4j2.xml");
         servletContext.setInitParameter("spring.profiles.active", "production");
-        //servletContext.addListener(new ContextLoaderListener(root));
-   	 
+        
         servletContext.addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
           .addMappingForUrlPatterns(null, false, "/*");
+        
+        LOG.info("Filters count - " + servletContext.getFilterRegistrations().keySet().size());
+	     for (String key : servletContext.getFilterRegistrations().keySet()) {
+	    	 LOG.info("FILTER - " + key);
+	     }
     }
     
 	@Override
@@ -44,9 +57,19 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	
 	@Override
 	protected Filter[] getServletFilters() {
-		CharacterEncodingFilter cef = new CharacterEncodingFilter();
-		cef.setEncoding("UTF-8");
-		cef.setForceEncoding(true);
-		return new Filter[] {new HiddenHttpMethodFilter(), cef};
+		CharacterEncodingFilter cef = new CharacterEncodingFilter(
+				"UTF-8", 
+				true, 
+				true);
+		return new Filter[] {new HiddenHttpMethodFilter(), new UrlLangAppenderFilter(), cef};
 	}
+	
+//With Boot	
+/*	@Bean
+	public  FilterRegistrationBean<UrlLangAppenderFilter> logFilter() {
+	    FilterRegistrationBean<UrlLangAppenderFilter> registrationBean = new FilterRegistrationBean<>();
+	    registrationBean.setFilter(new UrlLangAppenderFilter());
+	    registrationBean.addUrlPatterns("/home", "/orders");
+	    return registrationBean;
+	}*/
 }

@@ -1,3 +1,5 @@
+export {Order, OrderImage, Actions, separateObjectsAndStringify};
+
 /**
  *
  * Scripts for filtering fields when creating a JSON request
@@ -5,6 +7,21 @@
  */
 
 
+// <!-- private -->
+function getKeys(obj) {
+    let keys = [];
+    for(let key in obj) {
+	if(obj[key] instanceof Object && !(obj[key] instanceof Array)) {
+	    keys.push(key);
+	    keys = keys.concat(getKeys(obj[key]));
+	} else {    
+	    keys.push(key);
+	}
+    }
+    return keys;
+}
+
+// <!-- public -->
 function Order(id = 0, createDate = new Date(), name = "", description = "", done = false) {
 	//The name of the constructor must be the same (case sensitive) as the field
 	//in the ObjectsWrapper.class 
@@ -29,19 +46,6 @@ function Actions(action = "", hideRdy = false) {
 	this.hideRdy = hideRdy;
 }
 
-function getKeys(obj) {
-    let keys = [];
-    for(let key in obj) {
-	if(obj[key] instanceof Object && !(obj[key] instanceof Array)) {
-	    keys.push(key);
-	    keys = keys.concat(getKeys(obj[key]));
-	} else {    
-	    keys.push(key);
-	}
-    }
-    return keys;
-}
-
 function separateObjectsAndStringify(object, ...templates) {
 	let separated = {};
 	for(let template of templates) {
@@ -54,3 +58,5 @@ function separateObjectsAndStringify(object, ...templates) {
 	}
 	return JSON.stringify(separated);
 }
+
+

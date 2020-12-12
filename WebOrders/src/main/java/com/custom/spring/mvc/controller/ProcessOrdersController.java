@@ -23,7 +23,7 @@ import com.custom.spring.services.ValidateService;
 
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/processorders")
 public class ProcessOrdersController {
 	private static final Logger LOG = LogManager.getLogger("customLog");
 	@Autowired
@@ -31,17 +31,15 @@ public class ProcessOrdersController {
 	@Autowired
 	ServletContext context;
 	
-	@RequestMapping(value = {"/processorders"}, method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public String processOrdersGet(Model model) {
 		return "[]";
 	}
 	
-	@RequestMapping(value = {"/processorders"}, method = RequestMethod.POST, 
+	@RequestMapping(method = RequestMethod.POST, 
 			consumes = { 
-					MediaType.APPLICATION_JSON_VALUE//,
-				//	MediaType.MULTIPART_FORM_DATA_VALUE,
-				//	MediaType.MULTIPART_MIXED_VALUE},
+					MediaType.APPLICATION_JSON_VALUE
 	},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseBody
