@@ -25,7 +25,12 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
         
-        servletContext.addListener(Log4jServletContextListener.class);
+        //In environments older than Servlet 3.0, this initializer is responsible for starting up Log4j
+        //logging before anything else happens in application initialization. 
+        //In all environments, this shuts down Log4j after the application shuts down.
+        //May cause a memory leak
+        //servletContext.addListener(Log4jServletContextListener.class);
+        
         servletContext.setInitParameter("isLog4jContextSelectorNamed", "false");
         servletContext.setInitParameter("log4jConfiguration", "classpath:log4j2.xml");
         servletContext.setInitParameter("spring.profiles.active", "production");
