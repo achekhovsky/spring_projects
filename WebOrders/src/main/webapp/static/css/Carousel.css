@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+  outline: black;
+  background-size: 100%, 100%;
+  border-radius: 50%;
+  border: none;
+  background-image: none;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-size: 40px;
+  color: #D3D7CF;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 40px;
+  color: #D3D7CF;
+}
+
+.carousel-indicators li {
+    display: inline-block;
+    width: 20px;
+    height: 3px;
+    margin: 5px;
+    text-indent: 0;
+    cursor: pointer;
+    border: none;
+    /* border-radius: 50%; */
+    background-color: #EEEEEC;
+    /* box-shadow: inset 1px 1px 1px 1px rgba(0,0,0,0.5); */    
+}
+
+.carousel-indicators .active {
+    width: 20px;
+    height: 3px;
+    margin: 5px;
+    background-color: #D3D7CF;
+}

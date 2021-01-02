@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="en"
-	  xmlns="http://www.w3.org/1999/xhtml">
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org">
 	  
 	<head>
 	        <!-- Required meta tags -->
 	    <meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="static/css/Carousel.css">
 		<script src="static/js/jquery-3.3.1.min.js"></script>
 		<script src="static/bootstrap/js/bootstrap.js"></script>
 	    <title>JavaWEB</title>
@@ -22,32 +24,93 @@
     	<!-- Example row of columns -->
 	    <div class="row">
 	      <div class="col">
-	        <h2>Orders</h2>
+	        <h2 class="text-center">Orders</h2>
+			<div id="carouselOrdersIndicators" class="carousel slide" data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li data-target="#carouselOrdersIndicators" data-slide-to="0" class="active"></li>
+					<li data-target="#carouselOrdersIndicators" data-slide-to="1"></li>
+					<li data-target="#carouselOrdersIndicators" data-slide-to="2"></li>
+				</ol>
+				<div class="carousel-inner">
+					<div class="carousel-item active">
+						<img src="/JavaWEB/static/img/orders_home.png" class="d-block mx-auto w-50" alt="First slide">
+					</div>
+					<div class="carousel-item">
+						<img src="/JavaWEB/static/img/orders_main.png" class="d-block mx-auto w-50" alt="Second slide">
+					</div>
+					<div class="carousel-item">
+						<img src="/JavaWEB/static/img/orders_admin.png" class="d-block mx-auto w-50" alt="Third slide">
+					</div>
+				</div>
+				<a class="carousel-control-prev" href="#carouselOrdersIndicators" role="button" data-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				</a>
+				<a class="carousel-control-next" href="#carouselOrdersIndicators" role="button" data-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				</a>
+			</div>
 			<p> 	This is a simple web application for managing order information. 
 				It uses the following technology stack:
 			</p>
-			<ul>
-				<li>Java</li>
-				<li>Postgresql</li>
-				<li>Hibernate</li>
-				<li>Spring Framework</li>
+			<div class="row">
+				<div class="col">
 					<ul>
-						<li>Core</li>
-						<li>MVC</li>
-						<li>Security</li>
-						<li>Data JPA</li>
+						<li>Postgresql</li>
+						<li>Hibernate</li>
+						<li>JavaScript</li>
+						<li>Thymeleaf</li>
+						<li>Bootsrap</li>
+						<li>i18next</li>
 					</ul>
-				<li>JavaScript</li>
-				<li>Thymeleaf</li>
-				<li>Bootsrap</li>
-			</ul>
-	        <p><a class="btn btn-secondary" href="home" role="button">View</a></p>
+				</div>
+				<div class="col">
+					<ul>
+						<li>Java</li>
+						<li>Spring Framework</li>
+							<ul>
+								<li>Core</li>
+								<li>MVC</li>
+								<li>Security</li>
+								<li>Data JPA</li>
+							</ul>
+					</ul>
+				</div>
+			</div>
+	        <p><a class="btn btn-secondary btn-block mx-2" href="home" role="button">View</a></p>
 	      </div>
 	      <div class="col-md-0 border-right border-secondary"></div>
 	      <div class="col">
-	        <h2>Simple chat</h2>
-	        <p>On development stage</p>
-	        <p><a class="btn btn-secondary" href="#" role="button">View</a></p>
+	      	<h2 class="text-center">Next app</h2>
+	        <svg class="bd-placeholder-img bd-placeholder-img-lg " width="100%" height="100%" viewBox="0 0 100 100" role="img" preserveAspectRatio="xMidYMid meet" focusable="false">
+	        <!-- <rect x="0" y="0" width="100" height="100" rx="2" fill="#868e96"></rect> -->
+<!-- 	          <path id="CornerTextLine" fill="none" stroke="red" d="M5,10 L40,10 " />
+	          <text>
+			    <textPath font-size="30%" href="#CornerTextLine">
+			      Next app
+			    </textPath>
+			  </text> -->
+				<defs>
+					<linearGradient id="abovetextgradient" x1="0%" x2="0%" y1="0%" y2="100%">
+						<stop stop-color="#868e96" offset="10%"></stop>
+						<stop stop-color="#CFDee0" offset="75%"></stop>
+					</linearGradient>
+				</defs>
+				<defs>
+					<linearGradient id="belowlinegradient" x1="0%" x2="0%" y1="0%" y2="100%">
+						<stop stop-color="#CFDee0" offset="10%"></stop>
+						<stop stop-color="#868e96" offset="75%"></stop>
+					</linearGradient>
+				</defs>
+				<path id="AboveTextLine" d="M17,41 L83,14" fill="url(#abovetextgradient)" stroke="url(#abovetextgradient)" stroke-width="1.2"/>
+	          <path id="BisectorTextLine" fill="none" stroke="none" d="M20,50 L95,20" />
+			  <text>
+			  <!-- fill="#868e96" -->
+			    <textPath font-size="60%" fill="url(#abovetextgradient)" href="#BisectorTextLine">
+			      Comming soon...
+			    </textPath>
+			  </text>
+			  <path id="AboveTextLine" d="M22,54 L87,27" fill="url(#belowlinegradient)" stroke="url(#belowlinegradient)" stroke-width="1.2"/>
+	        </svg>
 	      </div>
 	    </div>
 	    <hr>
