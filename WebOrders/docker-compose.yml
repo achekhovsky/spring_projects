@@ -1,0 +1,25 @@
+services:
+   web:
+      build: ./web_docker
+      ports:
+       - "8080:8080"
+      volumes:
+       - type: bind
+         source: ./target/JavaWEB.war
+         target: /usr/local/tomcat/webapps/JavaWEB.war
+      networks:
+       - back-tier
+      depends_on: 
+       - db
+   db:
+      build: ./psql_docker
+      volumes:
+       - type: bind
+         source: ./db-data
+         target: /var/lib/postgresql/data
+      networks:
+       - back-tier
+networks:
+   # The presence of these object is sufficient to define them
+   back-tier:
+      driver: bridge 
